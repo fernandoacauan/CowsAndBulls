@@ -42,8 +42,8 @@ begin
 	variable vaca : integer;
    begin
       if (rising_edge(clk)) then
-       if (ok = '0') then --para que o input só seja aceito 1 vez
-	clear <= '0'; -- clear seria a flag que só reseta quando param de precionar o botao
+       if (ok = '0') then --para que o input sÃ³ seja aceito 1 vez
+	clear <= '0'; -- clear seria a flag que sÃ³ reseta quando param de precionar o botao
 	elsif (ok = '1' and clear = '0') then
 	case estados is
 	  when "000" => -- ler segr1
@@ -94,14 +94,14 @@ begin
 		touro := 0;
 		vaca := 0;
 		adv := input;
-		if	(adv(0 downto 3) = segr1(0 downto 3)) then touro := touro + 1;
-		elsif	(adv(4 downto 7) = segr1(4 downto 7)) then touro := touro + 1;
-		elsif	(adv(8 downto 11) = segr1(8 downto 11)) then touro := touro + 1;
-		elsif	(adv(12 downto 15) = segr2(12 downto 15)) then touro := touro + 1;
-		elsif	(adv(0 downto 3) = segr1(4 downto 7) or adv(0 downto 3) = segr1(8 downto 11) or adv(0 downto 3) = segr1(12 downto 15)) then vaca := vaca + 1;
-		elsif	(adv(4 downto 7) = segr1(0 downto 3) or adv(4 downto 7) = segr1(8 downto 11) or adv(4 downto 7) = segr1(12 downto 15)) then vaca := vaca + 1;
-		elsif	(adv(8 downto 11) = segr1(4 downto 7) or adv(8 downto 11) = segr1(0 downto 3) or adv(8 downto 11) = segr1(12 downto 15)) then vaca := vaca + 1;
-		elsif	(adv(12 downto 15) = segr1(4 downto 7) or adv(12 downto 15) = segr1(8 downto 11) or adv(12 downto 15) = segr1(0 downto 3)) then vaca := vaca + 1;
+		if	(adv(0 downto 3) = segr1(0 downto 3)) then touro := touro + 1; end if;
+		if	(adv(4 downto 7) = segr1(4 downto 7)) then touro := touro + 1; end if;
+		if	(adv(8 downto 11) = segr1(8 downto 11)) then touro := touro + 1; end if;
+		if	(adv(12 downto 15) = segr2(12 downto 15)) then touro := touro + 1; end if;
+		if	(adv(0 downto 3) = segr1(4 downto 7) or adv(0 downto 3) = segr1(8 downto 11) or adv(0 downto 3) = segr1(12 downto 15)) then vaca := vaca + 1; end if;
+		if	(adv(4 downto 7) = segr1(0 downto 3) or adv(4 downto 7) = segr1(8 downto 11) or adv(4 downto 7) = segr1(12 downto 15)) then vaca := vaca + 1; end if;
+		if	(adv(8 downto 11) = segr1(4 downto 7) or adv(8 downto 11) = segr1(0 downto 3) or adv(8 downto 11) = segr1(12 downto 15)) then vaca := vaca + 1; end if;
+		if	(adv(12 downto 15) = segr1(4 downto 7) or adv(12 downto 15) = segr1(8 downto 11) or adv(12 downto 15) = segr1(0 downto 3)) then vaca := vaca + 1;
 		end if;
 		if(touro = 4) then 
 			w2 <= w2 + b"1"; 
