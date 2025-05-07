@@ -30,6 +30,17 @@ architecture game of Game is
    signal clear   : std_logic := '0';
    signal w1 	  : unsigned(7 downto 0) := "00000000";
    signal w2 	  : unsigned(7 downto 0) := "00000000";
+   signal dsp_msg : std_logic_vector(2 downto 0) := "000";
+
+--****ESTADOS DO dsp_msg*******
+--  "000" limpa o clear       |
+--  "001" imprime "J1 SETUP"  |
+--  "010" imprime "J2 SETUP"  |
+--  "011" imprime "J1 GUESS"  |
+--  "100" imprime "J2 GUESS"  |
+--  "101" imprime " x TO y VA"|
+--  "110" imprime "BULLSEYE"  |
+--***************************** 
    
 begin
    main: process is
@@ -43,7 +54,30 @@ begin
    begin
       if (rising_edge(clk)) then
        if (ok = '0') then --para que o input só seja aceito 1 vez
-	clear <= '0'; -- clear seria a flag que só reseta quando param de precionar o botao
+	case dsp_msg is
+	   when "001" =>
+	    --algoritmo pra imprimir "J1 SETUP"
+	    dsp_msg <= "000";
+	   when "010" =>
+	    --algoritmo pra imprimir "J2 SETUP"
+	    dsp_msg <= "000";
+	   when "011" =>
+	    --algoritmo pra imprimir "J1 GUESS"
+	    dsp_msg <= "000";
+	   when "100" =>
+	    --algoritmo pra imprimir "J2 GUESS"
+	    dsp_msg <= "000";
+	   when "101" =>
+	    --algoritmo pra imprimir " x TO y VA"
+	    dsp_msg <= "000";
+	   when "110" =>
+	    --algoritmo pra imprimir "BULLSEYE"
+	    dsp_msg <= "000";
+
+	   when "000" =>
+	    clear <= '0'; -- clear seria a flag que só reseta quando param de precionar o botao
+	   when others => clear <= '0';
+	  end case;
 	elsif (ok = '1' and clear = '0') then
 	case estados is
 	  when "000" => -- ler segr1
