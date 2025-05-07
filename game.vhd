@@ -30,7 +30,7 @@ architecture game of Game is
    signal clear   : std_logic := '0';
    signal w1 	  : unsigned(7 downto 0) := "00000000";
    signal w2 	  : unsigned(7 downto 0) := "00000000";
-   signal dsp_msg : std_logic_vector(2 downto 0) := "000";
+   signal dsp_msg : std_logic_vector(2 downto 0) := "001";
 
 --****ESTADOS DO dsp_msg*******
 --  "000" limpa o clear       |
