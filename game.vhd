@@ -74,14 +74,14 @@ begin
 		touro := 0;
 		vaca := 0;
 		adv := input;
-		if	(adv(0 downto 3) = segr2(0 downto 3)) then touro := touro + 1;
-		elsif	(adv(4 downto 7) = segr2(4 downto 7)) then touro := touro + 1;
-		elsif	(adv(8 downto 11) = segr2(8 downto 11)) then touro := touro + 1;
-		elsif	(adv(12 downto 15) = segr2(12 downto 15)) then touro := touro + 1;
-		elsif	(adv(0 downto 3) = segr2(4 downto 7) or adv(0 downto 3) = segr2(8 downto 11) or adv(0 downto 3) = segr2(12 downto 15)) then vaca := vaca + 1;
-		elsif	(adv(4 downto 7) = segr2(0 downto 3) or adv(4 downto 7) = segr2(8 downto 11) or adv(4 downto 7) = segr2(12 downto 15)) then vaca := vaca + 1;
-		elsif	(adv(8 downto 11) = segr2(4 downto 7) or adv(8 downto 11) = segr2(0 downto 3) or adv(8 downto 11) = segr2(12 downto 15)) then vaca := vaca + 1;
-		elsif	(adv(12 downto 15) = segr2(4 downto 7) or adv(12 downto 15) = segr2(8 downto 11) or adv(12 downto 15) = segr2(0 downto 3)) then vaca := vaca + 1;
+		if	(adv(0 downto 3) = segr2(0 downto 3)) then touro := touro + 1; end if;
+		if	(adv(4 downto 7) = segr2(4 downto 7)) then touro := touro + 1; end if;
+		if	(adv(8 downto 11) = segr2(8 downto 11)) then touro := touro + 1; end if;
+		if	(adv(12 downto 15) = segr2(12 downto 15)) then touro := touro + 1; end if;
+		if	(adv(0 downto 3) = segr2(4 downto 7) or adv(0 downto 3) = segr2(8 downto 11) or adv(0 downto 3) = segr2(12 downto 15)) then vaca := vaca + 1; end if;
+		if	(adv(4 downto 7) = segr2(0 downto 3) or adv(4 downto 7) = segr2(8 downto 11) or adv(4 downto 7) = segr2(12 downto 15)) then vaca := vaca + 1; end if;
+		if	(adv(8 downto 11) = segr2(4 downto 7) or adv(8 downto 11) = segr2(0 downto 3) or adv(8 downto 11) = segr2(12 downto 15)) then vaca := vaca + 1; end if;
+		if	(adv(12 downto 15) = segr2(4 downto 7) or adv(12 downto 15) = segr2(8 downto 11) or adv(12 downto 15) = segr2(0 downto 3)) then vaca := vaca + 1;
 		end if;
 		if (touro = 4) then 
 			w1 <= w1 + b"1"; 
