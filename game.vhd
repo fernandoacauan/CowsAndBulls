@@ -30,7 +30,7 @@ architecture game of Game is
    signal clear   : std_logic := '0';
    signal w1 	  : unsigned(7 downto 0) := "00000000";
    signal w2 	  : unsigned(7 downto 0) := "00000000";
-   signal dsp_msg : std_logic_vector(2 downto 0) := "001";
+   signal dsp_msg : std_logic_vector(2 downto 0) := "000";
 
 --****ESTADOS DO dsp_msg*******
 --  "000" limpa o clear       |
@@ -51,6 +51,7 @@ begin
    	variable adv  : std_logic_vector(15 downto 0) := "0000000000000000";
 	variable touro: integer;
 	variable vaca : integer;
+	variable current_p: integer := 1;
    begin
       if (rising_edge(clk)) then
        if (ok = '0') then --para que o input só seja aceito 1 vez
@@ -89,9 +90,10 @@ begin
 		if( num0 = num1 or num0 = num2 or num0 = num3 or num1 = num2 or num1 = num3 or num2 = num3) then
 				-- faz alguma coisa pra mostrar erro: parte = rodrigo;
 		else
-			estados <= "001";  
+			estados <= "001"; 
 		end if;
 		clear <= '1';
+		dsp_msg <= "010";
 	 when  "001" => -- ler segr2
 		segr2 <= input;
 		num0 := input (3 downto 0);
@@ -104,6 +106,7 @@ begin
 			estados <= "010";  
 		end if;
 		clear <= '1';
+		dsp_msg <= "011";
 	  when "010" => -- user1 tenta adivinhar o segredo do user2
 		touro := 0;
 		vaca := 0;
@@ -115,13 +118,14 @@ begin
 		if	(adv(0 downto 3) = segr2(4 downto 7) or adv(0 downto 3) = segr2(8 downto 11) or adv(0 downto 3) = segr2(12 downto 15)) then vaca := vaca + 1; end if;
 		if	(adv(4 downto 7) = segr2(0 downto 3) or adv(4 downto 7) = segr2(8 downto 11) or adv(4 downto 7) = segr2(12 downto 15)) then vaca := vaca + 1; end if;
 		if	(adv(8 downto 11) = segr2(4 downto 7) or adv(8 downto 11) = segr2(0 downto 3) or adv(8 downto 11) = segr2(12 downto 15)) then vaca := vaca + 1; end if;
-		if	(adv(12 downto 15) = segr2(4 downto 7) or adv(12 downto 15) = segr2(8 downto 11) or adv(12 downto 15) = segr2(0 downto 3)) then vaca := vaca + 1;
-		end if;
+		if	(adv(12 downto 15) = segr2(4 downto 7) or adv(12 downto 15) = segr2(8 downto 11) or adv(12 downto 15) = segr2(0 downto 3)) then vaca := vaca + 1; end if;
 		if (touro = 4) then 
 			w1 <= w1 + b"1"; 
 			estados <= "000";
+			dsp_msg <= "110";
 		else
-			estados <= "011";
+			estados <= "100";
+			dsp_msg <= "101";
 		end if;
 		clear <= '1';
 	  when "011" => -- user2 tenta adivinhar o segredo do user1
@@ -135,15 +139,27 @@ begin
 		if	(adv(0 downto 3) = segr1(4 downto 7) or adv(0 downto 3) = segr1(8 downto 11) or adv(0 downto 3) = segr1(12 downto 15)) then vaca := vaca + 1; end if;
 		if	(adv(4 downto 7) = segr1(0 downto 3) or adv(4 downto 7) = segr1(8 downto 11) or adv(4 downto 7) = segr1(12 downto 15)) then vaca := vaca + 1; end if;
 		if	(adv(8 downto 11) = segr1(4 downto 7) or adv(8 downto 11) = segr1(0 downto 3) or adv(8 downto 11) = segr1(12 downto 15)) then vaca := vaca + 1; end if;
-		if	(adv(12 downto 15) = segr1(4 downto 7) or adv(12 downto 15) = segr1(8 downto 11) or adv(12 downto 15) = segr1(0 downto 3)) then vaca := vaca + 1;
-		end if;
+		if	(adv(12 downto 15) = segr1(4 downto 7) or adv(12 downto 15) = segr1(8 downto 11) or adv(12 downto 15) = segr1(0 downto 3)) then vaca := vaca + 1; end if;
 		if(touro = 4) then 
 			w2 <= w2 + b"1"; 
 			estados <= "000";
+			dsp_msg <= "110";
 		else
-			estados <= "010";
+			estados <= "100";
+			dsp_msg <= "101";
 		end if;
 		clear <= '1';
+	   when "100" =>
+		if ( current_p = 1) then
+			estados <= "011";
+			dsp_msg <= "100";
+			current_p := current_p + 1;
+		elsif ( current_p = 2) then
+			estados <= "010";
+			dsp_msg <= "011";
+			current_p := current_p - 1;
+		end if;
+		
 	 when others =>
 	end case;
       end if;
