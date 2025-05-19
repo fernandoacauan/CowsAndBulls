@@ -260,9 +260,6 @@ BEGIN
                                 WHEN 3 =>
                                     display_segment <= "00001101"; -- 3
                                     counter <= "0001";
-                                WHEN 4 =>
-                                    display_segment <= "10011001"; -- 4 (bcfg)
-                                    counter <= "0001";
                                 WHEN OTHERS =>  display_segment <= "10000001";
                             END CASE;
                         WHEN "0001" =>
@@ -286,16 +283,19 @@ BEGIN
                             CASE vaca IS
                                 WHEN 0 =>
                                     display_segment <= "00000011"; -- 0
-                                    counter <= "0001";
+                                    counter <= "0110";
                                 WHEN 1 =>
                                     display_segment <= "10011111"; -- 1
-                                    counter <= "0001";
+                                    counter <= "0110";
                                 WHEN 2 =>
                                     display_segment <= "00100101"; -- 2
-                                    counter <= "0001";
+                                    counter <= "0110";
                                 WHEN 3 =>
                                     display_segment <= "00001101"; -- 3
-                                    counter <= "0001";
+                                    counter <= "0110";
+                                WHEN 4 =>
+                                    display_segment <= "10011001"; -- 4 (bcfg)
+                                    counter <= "0110";
                                 WHEN OTHERS =>
                             END CASE;
                         WHEN "0110" =>
