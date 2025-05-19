@@ -43,6 +43,7 @@ USE ieee.numeric_std.ALL;
 
 ENTITY Game IS PORT (
     input           : IN  STD_LOGIC_VECTOR(15 DOWNTO 0);
+    rst             : IN  STD_LOGIC;
     clk             : IN  STD_LOGIC;
     ok              : IN  STD_LOGIC;
     display_segment : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -72,7 +73,7 @@ BEGIN
     )
     PORT MAP (
         clock    => clk,
-        reset    => '0', -- Reset desabilitado
+        reset    => '0',
         ck_1KHz  => ck_1KHz
     );
 
@@ -83,6 +84,15 @@ BEGIN
         VARIABLE current_p : INTEGER := 1;
     BEGIN
         IF rising_edge(ck_1KHz) THEN
+            --IF rst = '1' THEN
+            --    dsp_msg <= "001";
+            --    estados <= "000";
+            --    w1 <= (OTHERS => '0');
+            --    w2 <= (OTHERS => '0');
+            --    vit1 <= STD_LOGIC_VECTOR(w1);
+            --    vit2 <= STD_LOGIC_VECTOR(w2);
+            --    current_p := 1;
+            -- END IF;
             CASE dsp_msg IS
                 WHEN "001" =>
                     --algoritmo pra imprimir "J1 SETUP"
@@ -272,17 +282,17 @@ BEGIN
                             counter <= "0011";
                         WHEN "0011" =>
                             AN <= "11101111";
-                            display_segment <= "00000011"; -- o
+                            display_segment <= "00000010"; -- o
                             counter <= "0100";
                         WHEN "0100" =>
-                            AN <= "11110111";
+                            AN <= "11111011";
                             display_segment <= "11111111"; -- espaco
                             counter <= "0101";
                         WHEN "0101" =>
-                            AN <= "11111011";
+                            AN <= "11110111";
                             CASE vaca IS
                                 WHEN 0 =>
-                                    display_segment <= "00000011"; -- 0
+                                    display_segment <= "00000001"; -- 0
                                     counter <= "0110";
                                 WHEN 1 =>
                                     display_segment <= "10011111"; -- 1
@@ -362,11 +372,13 @@ BEGIN
                         num3 := input (15 DOWNTO 12);
                         IF (num0 = num1 OR num0 = num2 OR num0 = num3 OR num1 = num2 OR num1 = num3 OR num2 = num3) THEN
                             -- faz alguma coisa pra mostrar erro: parte = rodrigo;
+                            estados <= "000";
+                            dsp_msg <= "001";
                         ELSE
                             estados <= "001";
+                            dsp_msg <= "010";
                         END IF;
                         clear <= '1';
-                        dsp_msg <= "010";
                     WHEN "001" => -- ler segr2
                         segr2 <= input;
                         num0 := input (3 DOWNTO 0);
@@ -375,11 +387,13 @@ BEGIN
                         num3 := input (15 DOWNTO 12);
                         IF (num0 = num1 OR num0 = num2 OR num0 = num3 OR num1 = num2 OR num1 = num3 OR num2 = num3) THEN
                             -- faz alguma coisa pra mostrar erro: parte = rodrigo;
+                            estados <= "001";
+                            dsp_msg <= "010";
                         ELSE
                             estados <= "010";
+                            dsp_msg <= "011";
                         END IF;
                         clear <= '1';
-                        dsp_msg <= "011";
                     WHEN "010" => -- user1 tenta adivinhar o segredo do user2
                         touro := 0;
                         vaca := 0;
