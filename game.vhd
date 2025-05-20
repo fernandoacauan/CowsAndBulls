@@ -77,22 +77,22 @@ BEGIN
         ck_1KHz  => ck_1KHz
     );
 
-    main : PROCESS (ck_1KHz)
+    main : PROCESS (ck_1KHz, rst)
         VARIABLE num0, num1, num2, num3 : STD_LOGIC_VECTOR(3 DOWNTO 0);
         VARIABLE adv : STD_LOGIC_VECTOR(15 DOWNTO 0);
         VARIABLE touro, vaca : INTEGER := 0;
         VARIABLE current_p : INTEGER := 1;
     BEGIN
         IF rising_edge(ck_1KHz) THEN
-            --IF rst = '1' THEN
-            --    dsp_msg <= "001";
-            --    estados <= "000";
-            --    w1 <= (OTHERS => '0');
-            --    w2 <= (OTHERS => '0');
-            --    vit1 <= STD_LOGIC_VECTOR(w1);
-            --    vit2 <= STD_LOGIC_VECTOR(w2);
-            --    current_p := 1;
-            -- END IF;
+            IF rst = '0' THEN
+                dsp_msg <= "001";
+                estados <= "000";
+                w1 <= (OTHERS => '0');
+                w2 <= (OTHERS => '0');
+                vit1 <= STD_LOGIC_VECTOR(w1);
+                vit2 <= STD_LOGIC_VECTOR(w2);
+                current_p := 1;
+            END IF;
             CASE dsp_msg IS
                 WHEN "001" =>
                     --algoritmo pra imprimir "J1 SETUP"
@@ -101,35 +101,35 @@ BEGIN
 
                         WHEN "0000" =>
                             AN <= "01111111";
-                            display_segment <= "10000111"; -- (BCD) 11100001 (original)
+                            display_segment <= "10000111"; -- (BCD) 11100001 (original) | 'j'
                             counter <= "0001";
                         WHEN "0001" =>
                             AN <= "10111111";
-                            display_segment <= "10011111";
+                            display_segment <= "10011111"; -- '1'
                             counter <= "0010";
                         WHEN "0010" =>
                             AN <= "11111111";
-                            display_segment <= "11111111";
+                            display_segment <= "11111111"; -- ' '
                             counter <= "0011";
                         WHEN "0011" =>
                             AN <= "11101111";
-                            display_segment <= "01001001";
+                            display_segment <= "01001001"; -- 's'
                             counter <= "0100";
                         WHEN "0100" =>
                             AN <= "11110111";
-                            display_segment <= "01100001";
+                            display_segment <= "01100001"; -- 'e'
                             counter <= "0101";
                         WHEN "0101" =>
                             AN <= "11111011";
-                            display_segment <= "11100001";
+                            display_segment <= "11100001"; -- 't'
                             counter <= "0110";
                         WHEN "0110" =>
                             AN <= "11111101";
-                            display_segment <= "10000011";
+                            display_segment <= "10000011"; -- 'u'
                             counter <= "0111";
                         WHEN "0111" =>
                             AN <= "11111110";
-                            display_segment <= "00110001";
+                            display_segment <= "00110001"; -- 'p'
                             counter <= "0000";
                         WHEN OTHERS =>
                     END CASE;
@@ -259,7 +259,7 @@ BEGIN
                             AN <= "01111111";
                             CASE touro IS
                                 WHEN 0 =>
-                                    display_segment <= "00000001"; -- 0
+                                    display_segment <= "00000011"; -- 0
                                     counter <= "0001";
                                 WHEN 1 =>
                                     display_segment <= "10011111"; -- 1
@@ -282,7 +282,7 @@ BEGIN
                             counter <= "0011";
                         WHEN "0011" =>
                             AN <= "11101111";
-                            display_segment <= "00000010"; -- o
+                            display_segment <= "11000101"; -- o
                             counter <= "0100";
                         WHEN "0100" =>
                             AN <= "11111011";
@@ -292,7 +292,7 @@ BEGIN
                             AN <= "11110111";
                             CASE vaca IS
                                 WHEN 0 =>
-                                    display_segment <= "00000001"; -- 0
+                                    display_segment <= "00000011"; -- 0
                                     counter <= "0110";
                                 WHEN 1 =>
                                     display_segment <= "10011111"; -- 1
@@ -423,7 +423,8 @@ BEGIN
                             vaca := vaca + 1;
                         END IF;
                         IF (touro = 4) THEN
-                            w1 <= w1 + b"1";
+                            w1 <= shift_left(w1, 1);
+                            w1(0) <= w1(0) or '1';
                             estados <= "101";
                             dsp_msg <= "110";
                         ELSE
@@ -460,7 +461,8 @@ BEGIN
                             vaca := vaca + 1;
                         END IF;
                         IF (touro = 4) THEN
-                            w2 <= w2 + b"1";
+                            w2 <= shift_left(w2, 1);
+                            w2(0) <= w2(0) or '1';
                             estados <= "101";
                             dsp_msg <= "110";
                         ELSE
@@ -491,6 +493,7 @@ BEGIN
     END PROCESS;
 
     -- Atribuição das saídas de vitórias
+    -- IF w1 (tava pra testar um bgl)
     vit1 <= STD_LOGIC_VECTOR(w1);
     vit2 <= STD_LOGIC_VECTOR(w2);
 
